@@ -21,7 +21,6 @@ The current version preserves that billing logic while redesigning the experienc
 
 ## Current Features
 
-- Real food photography across menu cards
 - Multi-category restaurant menu
 - Menu search
 - Category filtering
@@ -46,7 +45,7 @@ The current version preserves that billing logic while redesigning the experienc
 - Persistent order history
 - Daily order, open-order, and revenue metrics
 - Order IDs and timestamps
-- Expanded 20-item demo menu
+- Expanded 20-item demo menu with product photography
 - Previous and Next catalog navigation
 - Items-per-page controls for 6, 9, or 12 products
 - Responsive POS interface
@@ -71,6 +70,17 @@ MU50
 ```
 
 When valid, it applies a 50% discount before GST is calculated.
+
+## Menu Experience
+
+The current catalog includes 20 demo items across pizzas, sides, beverages, and desserts. The interface supports:
+
+- Product photography displayed without forced cropping or hover zoom
+- Menu search
+- Category filtering
+- Previous and Next page navigation
+- Page indicators and visible-item ranges
+- Items-per-page options for 6, 9, or 12 products
 
 ## Order Modes
 
