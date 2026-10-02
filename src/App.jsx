@@ -22,19 +22,24 @@ import {
 } from "lucide-react";
 import "./styles.css";
 
+const img = (filename) =>
+  "https://commons.wikimedia.org/wiki/Special:FilePath/" +
+  encodeURIComponent(filename) +
+  "?width=900";
+
 const menu = [
-  { id: 1, name: "Farmhouse Classic", category: "Pizza", price: 250, tag: "Classic", description: "Bell peppers, onion, tomato and mozzarella", image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=1000&q=85" },
-  { id: 2, name: "Truly Italian", category: "Pizza", price: 350, tag: "Popular", description: "Olives, herbs, mozzarella and tomato", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1000&q=85" },
-  { id: 3, name: "Deep Dish Supreme", category: "Pizza", price: 450, tag: "Premium", description: "Loaded deep-dish pizza with extra cheese", image: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=1000&q=85" },
-  { id: 4, name: "Paneer Tikka Pizza", category: "Pizza", price: 420, tag: "Spicy", description: "Paneer, onion, capsicum and tikka sauce", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1000&q=85" },
-  { id: 5, name: "Margherita", category: "Pizza", price: 220, tag: "Value", description: "Tomato, mozzarella and basil", image: "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1000&q=85" },
-  { id: 6, name: "Garlic Bread", category: "Sides", price: 150, tag: "Side", description: "Toasted garlic bread with herbs", image: "https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?auto=format&fit=crop&w=1000&q=85" },
-  { id: 7, name: "White Sauce Pasta", category: "Sides", price: 250, tag: "Side", description: "Creamy white-sauce pasta", image: "https://images.unsplash.com/photo-1556761223-4c4282c73f77?auto=format&fit=crop&w=1000&q=85" },
+  { id: 1, name: "Farmhouse Classic", category: "Pizza", price: 250, tag: "Classic", description: "Bell peppers, onion, tomato and mozzarella", image: img("MargheritaPizzaUS.jpg") },
+  { id: 2, name: "Truly Italian", category: "Pizza", price: 350, tag: "Popular", description: "Olives, herbs, mozzarella and tomato", image: img("PizzaMargherita.jpg") },
+  { id: 3, name: "Deep Dish Supreme", category: "Pizza", price: 450, tag: "Premium", description: "Loaded deep-dish pizza with extra cheese", image: img("Deep-Dish Pizza.jpg") },
+  { id: 4, name: "Paneer Tikka Pizza", category: "Pizza", price: 420, tag: "Spicy", description: "Paneer, onion, capsicum and tikka sauce", image: img("Paneer Tikka Pizza.jpg") },
+  { id: 5, name: "Margherita", category: "Pizza", price: 220, tag: "Value", description: "Tomato, mozzarella and basil", image: img("Margherita pizza.jpg") },
+  { id: 6, name: "Garlic Bread", category: "Sides", price: 150, tag: "Side", description: "Toasted garlic bread with herbs", image: img("Garlic bread.jpg") },
+  { id: 7, name: "White Sauce Pasta", category: "Sides", price: 250, tag: "Side", description: "Creamy white-sauce pasta", image: img("White sauce pasta.jpg") },
   { id: 8, name: "Cheese Dip", category: "Sides", price: 90, tag: "Add-on", description: "Warm cheese dip", image: "https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?auto=format&fit=crop&w=1000&q=85" },
   { id: 9, name: "Apna Cola", category: "Beverages", price: 90, tag: "Drink", description: "Chilled sparkling cola", image: "https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=1000&q=85" },
-  { id: 10, name: "Lemon Fizz", category: "Beverages", price: 110, tag: "Drink", description: "Sparkling lemon cooler", image: "https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=1000&q=85" },
-  { id: 11, name: "Chocolate Brownie", category: "Desserts", price: 140, tag: "Dessert", description: "Warm chocolate brownie", image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=1000&q=85" },
-  { id: 12, name: "Tiramisu Cup", category: "Desserts", price: 180, tag: "Dessert", description: "Coffee-flavored cream dessert", image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=1000&q=85" },
+  { id: 10, name: "Lemon Fizz", category: "Beverages", price: 110, tag: "Drink", description: "Sparkling lemon cooler", image: img("Classic Lemonade.jpg") },
+  { id: 11, name: "Chocolate Brownie", category: "Desserts", price: 140, tag: "Dessert", description: "Warm chocolate brownie", image: img("Brownie chocolate.jpg") },
+  { id: 12, name: "Tiramisu Cup", category: "Desserts", price: 180, tag: "Dessert", description: "Coffee-flavored cream dessert", image: img("Tiramisu dessert.jpg") },
   { id: 13, name: "Veggie Supreme", category: "Pizza", price: 390, tag: "Loaded", description: "Peppers, corn, onion, olives and mozzarella", image: "https://images.unsplash.com/photo-1548365328-8b849e6f7a14?auto=format&fit=crop&w=1000&q=85" },
   { id: 14, name: "Four Cheese Pizza", category: "Pizza", price: 460, tag: "Cheesy", description: "Mozzarella, cheddar, parmesan and cream cheese", image: "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1000&q=85" },
   { id: 15, name: "Stuffed Garlic Knots", category: "Sides", price: 170, tag: "New", description: "Soft garlic knots stuffed with cheese", image: "https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?auto=format&fit=crop&w=1000&q=85" },
@@ -409,7 +414,18 @@ function App() {
             {visibleMenu.map((item) => (
               <article className="menu-card" key={item.id}>
                 <div className="menu-visual">
-                  <img src={item.image} alt={item.name} loading="lazy" />
+                  <div className="image-fallback">
+                    <span>{item.category}</span>
+                    <strong>{item.name}</strong>
+                  </div>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    loading="lazy"
+                    onError={(event) => {
+                      event.currentTarget.style.display = "none";
+                    }}
+                  />
                   <span className="menu-tag">{item.tag}</span>
                 </div>
                 <div className="menu-body">
