@@ -1,8 +1,8 @@
-# M.U Pizzeria POS
+# Pizzeria Operations POS
 
 ## Live Demo
 
-[Open M.U Pizzeria POS](https://mu-pizzeria-pos.vercel.app/)
+[Open Pizzeria Operations POS](https://mu-pizzeria-pos.vercel.app/)
 
 A modern restaurant point-of-sale and automated billing workflow built from the original Java console billing project.
 
@@ -46,6 +46,9 @@ The current version preserves that billing logic while redesigning the experienc
 - Persistent order history
 - Daily order, open-order, and revenue metrics
 - Order IDs and timestamps
+- Expanded 20-item demo menu
+- Previous and Next catalog navigation
+- Items-per-page controls for 6, 9, or 12 products
 - Responsive POS interface
 
 ## Billing Logic
@@ -158,7 +161,7 @@ dist/
 
 ## Project Evolution
 
-The original Java implementation remains in the repository as `pizza.java` and `pizza.class`.
+The original Java implementation remains in the repository as `pizza.java` and `pizza.class`. Its console text used the name `M.U Pizzeria`; the source does not define what `M.U` stands for, so the modern interface uses the clearer product name **Pizzeria Operations POS**.
 
 The new React application modernizes the same core restaurant billing problem into a deployable POS and order-operations experience while preserving the original discount, tax, menu, and payment concepts.
 
