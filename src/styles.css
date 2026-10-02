@@ -1125,3 +1125,20 @@ main {
     justify-content: space-between;
   }
 }
+
+
+.menu-visual {
+  display: grid;
+  place-items: center;
+}
+
+.menu-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #f6efe7;
+}
+
+.menu-card:nth-child(n) .menu-visual {
+  background: #f6efe7;
+}
