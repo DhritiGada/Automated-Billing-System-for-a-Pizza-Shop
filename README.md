@@ -1,5 +1,9 @@
 # M.U Pizzeria POS
 
+## Live Demo
+
+[Open M.U Pizzeria POS](https://mu-pizzeria-pos.vercel.app/)
+
 A modern restaurant point-of-sale and automated billing workflow built from the original Java console billing project.
 
 ## Overview
@@ -126,3 +130,10 @@ dist/
 The original Java implementation remains in the repository as `pizza.java` and `pizza.class`.
 
 The new React application modernizes the same core restaurant billing problem into a deployable POS and order-operations experience while preserving the original discount, tax, menu, and payment concepts.
+
+
+## Deployment
+
+The current application is deployed on Vercel:
+
+[https://mu-pizzeria-pos.vercel.app/](https://mu-pizzeria-pos.vercel.app/)
