@@ -40,6 +40,14 @@ const menu = [
   { id: 10, name: "Lemon Fizz", category: "Beverages", price: 110, tag: "Drink", description: "Sparkling lemon cooler", image: img("Classic Lemonade.jpg") },
   { id: 11, name: "Chocolate Brownie", category: "Desserts", price: 140, tag: "Dessert", description: "Warm chocolate brownie", image: img("Brownie chocolate.jpg") },
   { id: 12, name: "Tiramisu Cup", category: "Desserts", price: 180, tag: "Dessert", description: "Coffee-flavored cream dessert", image: img("Tiramisu dessert.jpg") },
+  { id: 13, name: "Veggie Supreme", category: "Pizza", price: 390, tag: "Loaded", description: "Peppers, corn, onion, olives and mozzarella", image: img("Vegetarian pizza.jpg") },
+  { id: 14, name: "Four Cheese Pizza", category: "Pizza", price: 460, tag: "Cheesy", description: "Mozzarella, cheddar, parmesan and cream cheese", image: img("Quattro formaggi pizza.jpg") },
+  { id: 15, name: "Stuffed Garlic Knots", category: "Sides", price: 170, tag: "New", description: "Soft garlic knots stuffed with cheese", image: img("Garlic knots.jpg") },
+  { id: 16, name: "Crispy Potato Wedges", category: "Sides", price: 160, tag: "Crispy", description: "Seasoned potato wedges with herb salt", image: img("Potato wedges.jpg") },
+  { id: 17, name: "Cold Coffee", category: "Beverages", price: 140, tag: "Chilled", description: "Creamy cold coffee over ice", image: img("Iced coffee.jpg") },
+  { id: 18, name: "Berry Cooler", category: "Beverages", price: 130, tag: "Fresh", description: "Mixed berry sparkling cooler", image: img("Berry drink.jpg") },
+  { id: 19, name: "Vanilla Cheesecake", category: "Desserts", price: 190, tag: "Creamy", description: "Classic vanilla cheesecake slice", image: img("Cheesecake with vanilla.jpg") },
+  { id: 20, name: "Chocolate Mousse", category: "Desserts", price: 170, tag: "Rich", description: "Silky chocolate mousse cup", image: img("Chocolate mousse.jpg") },
 ];
 
 const toppings = [
@@ -95,6 +103,8 @@ function App() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [lastOrder, setLastOrder] = useState(null);
   const [toast, setToast] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
 
   useEffect(() => localStorage.setItem(KEYS.cart, JSON.stringify(cart)), [cart]);
   useEffect(() => localStorage.setItem(KEYS.orders, JSON.stringify(orders)), [orders]);
@@ -115,6 +125,13 @@ function App() {
       return matchesCategory && matchesQuery;
     });
   }, [query, category]);
+
+  useEffect(() => setPage(1), [query, category, pageSize]);
+
+  const pageCount = Math.max(1, Math.ceil(filteredMenu.length / pageSize));
+  const visibleMenu = filteredMenu.slice((page - 1) * pageSize, page * pageSize);
+  const rangeStart = filteredMenu.length ? (page - 1) * pageSize + 1 : 0;
+  const rangeEnd = Math.min(page * pageSize, filteredMenu.length);
 
   const addSimpleItem = (item) => {
     setCart((current) => {
@@ -243,7 +260,7 @@ function App() {
     }
 
     const order = {
-      id: "MU-" + String(Date.now()).slice(-6),
+      id: "POS-" + String(Date.now()).slice(-6),
       date: new Date().toISOString(),
       items: cart,
       subtotal,
@@ -287,7 +304,7 @@ function App() {
         <div className="brand">
           <div className="brand-mark">MU</div>
           <div>
-            <strong>M.U Pizzeria POS</strong>
+            <strong>Pizzeria Operations POS</strong>
             <span>Restaurant order & billing operations</span>
           </div>
         </div>
@@ -394,7 +411,7 @@ function App() {
           </div>
 
           <div className="menu-grid">
-            {filteredMenu.map((item) => (
+            {visibleMenu.map((item) => (
               <article className="menu-card" key={item.id}>
                 <div className="menu-visual">
                   <div className="image-fallback">
@@ -424,6 +441,36 @@ function App() {
                 </div>
               </article>
             ))}
+          </div>
+
+          <div className="catalog-pagination">
+            <div className="catalog-summary">
+              <span>Showing {rangeStart}-{rangeEnd} of {filteredMenu.length}</span>
+              <label>
+                Items per page
+                <select value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))}>
+                  {[6, 9, 12].map((sizeOption) => (
+                    <option key={sizeOption} value={sizeOption}>{sizeOption}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <div className="page-controls">
+              <button
+                onClick={() => setPage((current) => Math.max(1, current - 1))}
+                disabled={page === 1}
+              >
+                Previous
+              </button>
+              <span>Page {page} of {pageCount}</span>
+              <button
+                onClick={() => setPage((current) => Math.min(pageCount, current + 1))}
+                disabled={page === pageCount}
+              >
+                Next
+              </button>
+            </div>
           </div>
         </section>
 
