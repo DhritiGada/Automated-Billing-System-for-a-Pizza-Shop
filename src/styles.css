@@ -1007,3 +1007,45 @@ main {
     flex-direction: column;
   }
 }
+
+
+.menu-visual {
+  position: relative;
+  background: #efe7dc;
+}
+
+.image-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  padding: 18px;
+  text-align: center;
+  background: linear-gradient(145deg, #f3e3d2, #eadfd3);
+  color: #5c5148;
+}
+
+.image-fallback span {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: #9a7254;
+  font-weight: 800;
+}
+
+.image-fallback strong {
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.menu-visual img {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-tag {
+  z-index: 2;
+}
