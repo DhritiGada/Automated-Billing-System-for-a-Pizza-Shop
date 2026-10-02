@@ -21,11 +21,16 @@ The current version preserves that billing logic while redesigning the experienc
 
 ## Current Features
 
+- Real food photography across menu cards
 - Multi-category restaurant menu
 - Menu search
 - Category filtering
-- Pizza customization
+- Dine-in, takeaway, and delivery order modes
+- Customer and table/address capture
+- Pizza size selection
+- Crust selection
 - Extra topping selection
+- Kitchen notes for customized items
 - Per-item quantity controls
 - Persistent active cart using Local Storage
 - Coupon validation
@@ -33,10 +38,13 @@ The current version preserves that billing logic while redesigning the experienc
 - Automated subtotal calculation
 - CGST at 2.5%
 - SGST at 2.5%
+- Delivery fee calculation
 - Final total calculation
 - Card, PayPal, wallet, and cash payment selection
-- Completed-order workflow
+- Kitchen handoff workflow
+- Order status progression from New to Completed
 - Persistent order history
+- Daily order, open-order, and revenue metrics
 - Order IDs and timestamps
 - Responsive POS interface
 
@@ -61,6 +69,26 @@ MU50
 
 When valid, it applies a 50% discount before GST is calculated.
 
+## Order Modes
+
+The POS supports three service modes:
+
+- **Dine-in** with table number capture
+- **Takeaway**
+- **Delivery** with delivery-address capture and a demo delivery fee
+
+These details are stored with the order and remain visible in order operations.
+
+## Kitchen Workflow
+
+After checkout, an order enters the kitchen workflow with the status:
+
+```text
+New → Preparing → Ready → Completed
+```
+
+The Orders panel can advance each order through these stages.
+
 ## Pizza Customization
 
 Pizza items can be customized before being added to the order.
@@ -80,13 +108,16 @@ A user can:
 
 1. Browse or search the menu
 2. Choose a pizza and customize toppings
-3. Add sides, beverages, or desserts
-4. Adjust item quantities
-5. Apply a coupon
-6. Review the tax breakdown
-7. Select a payment method
-8. Complete the order
-9. Review completed orders in order history
+3. Choose dine-in, takeaway, or delivery
+4. Add customer, table, or address details
+5. Add sides, beverages, or desserts
+6. Adjust item quantities
+7. Apply a coupon
+8. Review GST, discounts, delivery fees, and total
+9. Select a payment method
+10. Send the order to the kitchen
+11. Advance the order through New, Preparing, Ready, and Completed
+12. Review order history and daily operational metrics
 
 The payment selector is a demo workflow and does not process a real payment.
 
