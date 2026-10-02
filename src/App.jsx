@@ -2,34 +2,46 @@ import { useEffect, useMemo, useState } from "react";
 import {
   BadgePercent,
   CheckCircle2,
+  ChevronRight,
   Clock3,
   CreditCard,
   History,
+  MapPin,
   Minus,
   Plus,
   ReceiptText,
   Search,
   ShoppingCart,
-  Sparkles,
+  Store,
   Trash2,
+  Truck,
+  UserRound,
+  UtensilsCrossed,
   WalletCards,
   X,
 } from "lucide-react";
 import "./styles.css";
 
+const CATEGORY_IMAGES = {
+  Pizza: "https://images.unsplash.com/photo-1581873372796-635b67ca2008?auto=format&fit=crop&w=1200&q=82",
+  Sides: "https://images.unsplash.com/photo-1669109230787-71bdd4699af4?auto=format&fit=crop&w=1200&q=82",
+  Beverages: "https://images.unsplash.com/photo-1591254471218-b33e875415c1?auto=format&fit=crop&w=1200&q=82",
+  Desserts: "https://images.unsplash.com/photo-1589375025852-a66cdd127efb?auto=format&fit=crop&w=1200&q=82",
+};
+
 const menu = [
-  { id: 1, name: "Farmhouse Classic", category: "Pizza", price: 250, emoji: "🍕", tag: "Classic", description: "Bell peppers, onion, tomato, cheese" },
-  { id: 2, name: "Truly Italian", category: "Pizza", price: 350, emoji: "🍕", tag: "Popular", description: "Olives, herbs, mozzarella, tomato" },
-  { id: 3, name: "Deep Dish Supreme", category: "Pizza", price: 450, emoji: "🍕", tag: "Premium", description: "Loaded deep-dish style pizza" },
-  { id: 4, name: "Paneer Tikka Pizza", category: "Pizza", price: 420, emoji: "🍕", tag: "Spicy", description: "Paneer, onion, capsicum, tikka sauce" },
-  { id: 5, name: "Margherita", category: "Pizza", price: 220, emoji: "🍕", tag: "Value", description: "Tomato, mozzarella, basil" },
-  { id: 6, name: "Garlic Bread", category: "Sides", price: 150, emoji: "🥖", tag: "Side", description: "Toasted garlic bread with herbs" },
-  { id: 7, name: "White Sauce Pasta", category: "Sides", price: 250, emoji: "🍝", tag: "Side", description: "Creamy white sauce pasta" },
-  { id: 8, name: "Cheese Dip", category: "Sides", price: 90, emoji: "🧀", tag: "Add-on", description: "Warm cheese dip" },
-  { id: 9, name: "Apna Cola", category: "Beverages", price: 90, emoji: "🥤", tag: "Drink", description: "Chilled cola" },
-  { id: 10, name: "Lemon Fizz", category: "Beverages", price: 110, emoji: "🍋", tag: "Drink", description: "Sparkling lemon cooler" },
-  { id: 11, name: "Chocolate Brownie", category: "Desserts", price: 140, emoji: "🍫", tag: "Dessert", description: "Warm chocolate brownie" },
-  { id: 12, name: "Tiramisu Cup", category: "Desserts", price: 180, emoji: "🍰", tag: "Dessert", description: "Coffee-flavored dessert cup" },
+  { id: 1, name: "Farmhouse Classic", category: "Pizza", price: 250, tag: "Classic", description: "Bell peppers, onion, tomato and mozzarella" },
+  { id: 2, name: "Truly Italian", category: "Pizza", price: 350, tag: "Popular", description: "Olives, herbs, mozzarella and tomato" },
+  { id: 3, name: "Deep Dish Supreme", category: "Pizza", price: 450, tag: "Premium", description: "Loaded deep-dish pizza with extra cheese" },
+  { id: 4, name: "Paneer Tikka Pizza", category: "Pizza", price: 420, tag: "Spicy", description: "Paneer, onion, capsicum and tikka sauce" },
+  { id: 5, name: "Margherita", category: "Pizza", price: 220, tag: "Value", description: "Tomato, mozzarella and basil" },
+  { id: 6, name: "Garlic Bread", category: "Sides", price: 150, tag: "Side", description: "Toasted garlic bread with herbs" },
+  { id: 7, name: "White Sauce Pasta", category: "Sides", price: 250, tag: "Side", description: "Creamy white-sauce pasta" },
+  { id: 8, name: "Cheese Dip", category: "Sides", price: 90, tag: "Add-on", description: "Warm cheese dip" },
+  { id: 9, name: "Apna Cola", category: "Beverages", price: 90, tag: "Drink", description: "Chilled sparkling cola" },
+  { id: 10, name: "Lemon Fizz", category: "Beverages", price: 110, tag: "Drink", description: "Sparkling lemon cooler" },
+  { id: 11, name: "Chocolate Brownie", category: "Desserts", price: 140, tag: "Dessert", description: "Warm chocolate brownie" },
+  { id: 12, name: "Tiramisu Cup", category: "Desserts", price: 180, tag: "Dessert", description: "Coffee-flavored cream dessert" },
 ];
 
 const toppings = [
@@ -38,6 +50,19 @@ const toppings = [
   { id: "mushroom", name: "Mushroom", price: 60 },
   { id: "jalapeno", name: "Jalapeño", price: 60 },
 ];
+
+const sizes = [
+  { id: "regular", name: "Regular", price: 0 },
+  { id: "large", name: "Large", price: 120 },
+];
+
+const crusts = [
+  { id: "classic", name: "Classic", price: 0 },
+  { id: "thin", name: "Thin", price: 0 },
+  { id: "cheese", name: "Cheese Burst", price: 80 },
+];
+
+const statusFlow = ["New", "Preparing", "Ready", "Completed"];
 
 const KEYS = {
   cart: "pizzeria-pos.cart",
@@ -60,8 +85,15 @@ function App() {
   const [coupon, setCoupon] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [payment, setPayment] = useState("Card");
+  const [orderType, setOrderType] = useState("Dine-in");
+  const [customer, setCustomer] = useState("");
+  const [table, setTable] = useState("");
+  const [address, setAddress] = useState("");
   const [selectedPizza, setSelectedPizza] = useState(null);
   const [selectedToppings, setSelectedToppings] = useState([]);
+  const [size, setSize] = useState("regular");
+  const [crust, setCrust] = useState("classic");
+  const [itemNote, setItemNote] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [lastOrder, setLastOrder] = useState(null);
   const [toast, setToast] = useState("");
@@ -81,12 +113,7 @@ function App() {
     const q = query.trim().toLowerCase();
     return menu.filter((item) => {
       const matchesCategory = category === "All" || item.category === category;
-      const matchesQuery =
-        !q ||
-        [item.name, item.category, item.tag, item.description]
-          .join(" ")
-          .toLowerCase()
-          .includes(q);
+      const matchesQuery = !q || [item.name, item.category, item.tag, item.description].join(" ").toLowerCase().includes(q);
       return matchesCategory && matchesQuery;
     });
   }, [query, category]);
@@ -96,33 +123,55 @@ function App() {
       const existing = current.find((entry) => entry.key === String(item.id));
       if (existing) {
         return current.map((entry) =>
-          entry.key === String(item.id)
-            ? { ...entry, quantity: entry.quantity + 1 }
-            : entry
+          entry.key === String(item.id) ? { ...entry, quantity: entry.quantity + 1 } : entry
         );
       }
-      return [
-        ...current,
-        {
-          key: String(item.id),
-          id: item.id,
-          name: item.name,
-          category: item.category,
-          unitPrice: item.price,
-          quantity: 1,
-          toppings: [],
-        },
-      ];
+      return [...current, {
+        key: String(item.id),
+        id: item.id,
+        name: item.name,
+        category: item.category,
+        unitPrice: item.price,
+        quantity: 1,
+        modifiers: [],
+        note: "",
+      }];
     });
     setToast("Added " + item.name);
   };
 
-  const addPizzaWithToppings = () => {
+  const openPizza = (item) => {
+    setSelectedPizza(item);
+    setSelectedToppings([]);
+    setSize("regular");
+    setCrust("classic");
+    setItemNote("");
+  };
+
+  const addPizzaWithModifiers = () => {
     if (!selectedPizza) return;
-    const extras = toppings.filter((item) => selectedToppings.includes(item.id));
+    const toppingItems = toppings.filter((item) => selectedToppings.includes(item.id));
+    const sizeItem = sizes.find((item) => item.id === size);
+    const crustItem = crusts.find((item) => item.id === crust);
     const unitPrice =
-      selectedPizza.price + extras.reduce((sum, item) => sum + item.price, 0);
-    const key = selectedPizza.id + ":" + selectedToppings.slice().sort().join(",");
+      selectedPizza.price +
+      (sizeItem?.price || 0) +
+      (crustItem?.price || 0) +
+      toppingItems.reduce((sum, item) => sum + item.price, 0);
+
+    const modifierNames = [
+      sizeItem?.name,
+      crustItem?.name,
+      ...toppingItems.map((item) => item.name),
+    ].filter(Boolean);
+
+    const key = [
+      selectedPizza.id,
+      size,
+      crust,
+      selectedToppings.slice().sort().join(","),
+      itemNote.trim().toLowerCase(),
+    ].join(":");
 
     setCart((current) => {
       const existing = current.find((entry) => entry.key === key);
@@ -132,47 +181,47 @@ function App() {
         );
       }
 
-      return [
-        ...current,
-        {
-          key,
-          id: selectedPizza.id,
-          name: selectedPizza.name,
-          category: "Pizza",
-          unitPrice,
-          quantity: 1,
-          toppings: extras,
-        },
-      ];
+      return [...current, {
+        key,
+        id: selectedPizza.id,
+        name: selectedPizza.name,
+        category: "Pizza",
+        unitPrice,
+        quantity: 1,
+        modifiers: modifierNames,
+        note: itemNote.trim(),
+      }];
     });
 
     setToast("Added customized " + selectedPizza.name);
     setSelectedPizza(null);
-    setSelectedToppings([]);
   };
 
   const updateQuantity = (key, delta) => {
     setCart((current) =>
       current
         .map((item) =>
-          item.key === key
-            ? { ...item, quantity: Math.max(0, item.quantity + delta) }
-            : item
+          item.key === key ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item
         )
         .filter((item) => item.quantity > 0)
     );
   };
 
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.unitPrice * item.quantity,
-    0
-  );
+  const subtotal = cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
   const discount = couponApplied ? subtotal * 0.5 : 0;
   const taxable = subtotal - discount;
+  const deliveryFee = orderType === "Delivery" && cart.length ? 60 : 0;
   const cgst = taxable * 0.025;
   const sgst = taxable * 0.025;
-  const total = taxable + cgst + sgst;
+  const total = taxable + cgst + sgst + deliveryFee;
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const todayRevenue = orders.reduce((sum, order) => {
+    const isToday = new Date(order.date).toDateString() === new Date().toDateString();
+    return sum + (isToday ? order.total : 0);
+  }, 0);
+
+  const openOrders = orders.filter((order) => order.status !== "Completed").length;
 
   const applyCoupon = () => {
     if (coupon.trim().toUpperCase() === "MU50") {
@@ -186,6 +235,14 @@ function App() {
 
   const placeOrder = () => {
     if (!cart.length) return;
+    if (orderType === "Dine-in" && !table.trim()) {
+      setToast("Add a table number for dine-in");
+      return;
+    }
+    if (orderType === "Delivery" && !address.trim()) {
+      setToast("Add a delivery address");
+      return;
+    }
 
     const order = {
       id: "MU-" + String(Date.now()).slice(-6),
@@ -195,8 +252,14 @@ function App() {
       discount,
       cgst,
       sgst,
+      deliveryFee,
       total,
       payment,
+      orderType,
+      customer: customer.trim() || "Guest",
+      table: table.trim(),
+      address: address.trim(),
+      status: "New",
     };
 
     setOrders((current) => [order, ...current]);
@@ -204,7 +267,20 @@ function App() {
     setCart([]);
     setCoupon("");
     setCouponApplied(false);
-    setToast("Order " + order.id + " completed");
+    setCustomer("");
+    setTable("");
+    setAddress("");
+    setToast("Order " + order.id + " sent to kitchen");
+  };
+
+  const advanceStatus = (orderId) => {
+    setOrders((current) =>
+      current.map((order) => {
+        if (order.id !== orderId) return order;
+        const index = statusFlow.indexOf(order.status);
+        return { ...order, status: statusFlow[Math.min(index + 1, statusFlow.length - 1)] };
+      })
+    );
   };
 
   return (
@@ -214,7 +290,7 @@ function App() {
           <div className="brand-mark">MU</div>
           <div>
             <strong>M.U Pizzeria POS</strong>
-            <span>Order & billing operations</span>
+            <span>Restaurant order & billing operations</span>
           </div>
         </div>
 
@@ -231,23 +307,76 @@ function App() {
         </div>
       </header>
 
+      <section className="ops-strip">
+        <div>
+          <span>Today's orders</span>
+          <strong>{orders.filter((order) => new Date(order.date).toDateString() === new Date().toDateString()).length}</strong>
+        </div>
+        <div>
+          <span>Open kitchen orders</span>
+          <strong>{openOrders}</strong>
+        </div>
+        <div>
+          <span>Today's revenue</span>
+          <strong>₹{todayRevenue.toFixed(0)}</strong>
+        </div>
+      </section>
+
       <section className="hero">
         <div>
-          <span className="eyebrow"><Sparkles size={14} /> RESTAURANT OPERATIONS</span>
-          <h1>Take the order. Calculate the bill. <em>Close faster.</em></h1>
+          <span className="eyebrow"><UtensilsCrossed size={14} /> RESTAURANT OPERATIONS</span>
+          <h1>Order entry, kitchen handoff, and billing in <em>one flow.</em></h1>
           <p>
-            A modern point-of-sale workflow for menu selection, pizza customization,
-            discounts, taxes, payment method selection, and completed-order history.
+            Build dine-in, takeaway, or delivery orders, customize pizzas, apply discounts,
+            calculate GST, select payment, and track each order through preparation.
           </p>
         </div>
 
         <div className="hero-stat">
-          <ReceiptText size={22} />
+          <ReceiptText size={23} />
           <div>
             <strong>Automated billing</strong>
-            <span>Subtotal → discount → GST → final total</span>
+            <span>Subtotal → discount → GST → fees → final total</span>
           </div>
         </div>
+      </section>
+
+      <section className="order-context">
+        <div className="type-selector">
+          {[
+            ["Dine-in", Store],
+            ["Takeaway", ShoppingCart],
+            ["Delivery", Truck],
+          ].map(([type, Icon]) => (
+            <button
+              key={type}
+              className={orderType === type ? "active" : ""}
+              onClick={() => setOrderType(type)}
+            >
+              <Icon size={17} />
+              {type}
+            </button>
+          ))}
+        </div>
+
+        <label>
+          <UserRound size={16} />
+          <input value={customer} onChange={(e) => setCustomer(e.target.value)} placeholder="Customer name (optional)" />
+        </label>
+
+        {orderType === "Dine-in" && (
+          <label>
+            <Store size={16} />
+            <input value={table} onChange={(e) => setTable(e.target.value)} placeholder="Table number" />
+          </label>
+        )}
+
+        {orderType === "Delivery" && (
+          <label className="address-field">
+            <MapPin size={16} />
+            <input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Delivery address" />
+          </label>
+        )}
       </section>
 
       <section className="workspace">
@@ -255,19 +384,11 @@ function App() {
           <div className="toolbar">
             <div className="search-box">
               <Search size={18} />
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search menu"
-              />
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search menu" />
             </div>
             <div className="category-tabs">
               {categories.map((item) => (
-                <button
-                  key={item}
-                  className={category === item ? "active" : ""}
-                  onClick={() => setCategory(item)}
-                >
+                <button key={item} className={category === item ? "active" : ""} onClick={() => setCategory(item)}>
                   {item}
                 </button>
               ))}
@@ -278,8 +399,8 @@ function App() {
             {filteredMenu.map((item) => (
               <article className="menu-card" key={item.id}>
                 <div className="menu-visual">
+                  <img src={CATEGORY_IMAGES[item.category]} alt={item.name} />
                   <span className="menu-tag">{item.tag}</span>
-                  <div className="food-emoji">{item.emoji}</div>
                 </div>
                 <div className="menu-body">
                   <span>{item.category}</span>
@@ -287,13 +408,7 @@ function App() {
                   <p>{item.description}</p>
                   <div className="menu-footer">
                     <strong>₹{item.price}</strong>
-                    <button
-                      onClick={() =>
-                        item.category === "Pizza"
-                          ? setSelectedPizza(item)
-                          : addSimpleItem(item)
-                      }
-                    >
+                    <button onClick={() => item.category === "Pizza" ? openPizza(item) : addSimpleItem(item)}>
                       {item.category === "Pizza" ? "Customize" : "Add"}
                     </button>
                   </div>
@@ -306,7 +421,7 @@ function App() {
         <aside className="bill-panel">
           <div className="bill-header">
             <div>
-              <span className="section-label">CURRENT ORDER</span>
+              <span className="section-label">CURRENT {orderType.toUpperCase()} ORDER</span>
               <h2>{itemCount} item{itemCount === 1 ? "" : "s"}</h2>
             </div>
             {cart.length > 0 && (
@@ -320,7 +435,7 @@ function App() {
           <div className="cart-items">
             {cart.length === 0 ? (
               <div className="empty-state">
-                <ShoppingCart size={28} />
+                <ShoppingCart size={30} />
                 <h3>No items yet</h3>
                 <p>Select menu items to begin an order.</p>
               </div>
@@ -329,21 +444,14 @@ function App() {
                 <div className="cart-row" key={item.key}>
                   <div>
                     <strong>{item.name}</strong>
-                    {item.toppings.length > 0 && (
-                      <span>
-                        + {item.toppings.map((topping) => topping.name).join(", ")}
-                      </span>
-                    )}
+                    {!!item.modifiers?.length && <span>{item.modifiers.join(" · ")}</span>}
+                    {!!item.note && <em>Note: {item.note}</em>}
                     <small>₹{item.unitPrice} each</small>
                   </div>
                   <div className="qty-control">
-                    <button onClick={() => updateQuantity(item.key, -1)}>
-                      <Minus size={14} />
-                    </button>
+                    <button onClick={() => updateQuantity(item.key, -1)}><Minus size={14} /></button>
                     <span>{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.key, 1)}>
-                      <Plus size={14} />
-                    </button>
+                    <button onClick={() => updateQuantity(item.key, 1)}><Plus size={14} /></button>
                   </div>
                   <strong>₹{(item.unitPrice * item.quantity).toFixed(0)}</strong>
                 </div>
@@ -357,17 +465,10 @@ function App() {
               <strong>Coupon</strong>
             </div>
             <div className="coupon-input">
-              <input
-                value={coupon}
-                onChange={(event) => {
-                  setCoupon(event.target.value);
-                  setCouponApplied(false);
-                }}
-                placeholder="Enter code"
-              />
+              <input value={coupon} onChange={(event) => { setCoupon(event.target.value); setCouponApplied(false); }} placeholder="Enter code" />
               <button onClick={applyCoupon}>Apply</button>
             </div>
-            <small>Try the original project code: MU50</small>
+            <small>Original project code: MU50</small>
           </div>
 
           <div className="bill-breakdown">
@@ -375,44 +476,34 @@ function App() {
             <div><span>Discount</span><strong>-₹{discount.toFixed(2)}</strong></div>
             <div><span>CGST 2.5%</span><strong>₹{cgst.toFixed(2)}</strong></div>
             <div><span>SGST 2.5%</span><strong>₹{sgst.toFixed(2)}</strong></div>
-            <div className="grand-total">
-              <span>Total</span>
-              <strong>₹{total.toFixed(2)}</strong>
-            </div>
+            {deliveryFee > 0 && <div><span>Delivery fee</span><strong>₹{deliveryFee.toFixed(2)}</strong></div>}
+            <div className="grand-total"><span>Total</span><strong>₹{total.toFixed(2)}</strong></div>
           </div>
 
           <div className="payment-section">
             <span className="section-label">PAYMENT METHOD</span>
             <div className="payment-grid">
               {["Card", "PayPal", "Wallet", "Cash"].map((method) => (
-                <button
-                  key={method}
-                  className={payment === method ? "active" : ""}
-                  onClick={() => setPayment(method)}
-                >
+                <button key={method} className={payment === method ? "active" : ""} onClick={() => setPayment(method)}>
                   {method === "Card" && <CreditCard size={16} />}
                   {method === "Wallet" && <WalletCards size={16} />}
                   {method === "Cash" && <ReceiptText size={16} />}
-                  {method === "PayPal" && <Sparkles size={16} />}
+                  {method === "PayPal" && <BadgePercent size={16} />}
                   {method}
                 </button>
               ))}
             </div>
           </div>
 
-          <button
-            className="checkout-button"
-            disabled={!cart.length}
-            onClick={placeOrder}
-          >
-            Complete order · ₹{total.toFixed(2)}
+          <button className="checkout-button" disabled={!cart.length} onClick={placeOrder}>
+            Send to kitchen · ₹{total.toFixed(2)}
           </button>
         </aside>
       </section>
 
       {selectedPizza && (
         <div className="modal-backdrop" onMouseDown={() => setSelectedPizza(null)}>
-          <div className="modal" onMouseDown={(event) => event.stopPropagation()}>
+          <div className="modal customization-modal" onMouseDown={(event) => event.stopPropagation()}>
             <div className="modal-header">
               <div>
                 <span className="section-label">CUSTOMIZE PIZZA</span>
@@ -421,36 +512,64 @@ function App() {
               <button onClick={() => setSelectedPizza(null)}><X size={20} /></button>
             </div>
 
-            <p className="modal-copy">
-              Base price ₹{selectedPizza.price}. Each extra topping adds ₹60.
-            </p>
-
-            <div className="topping-grid">
-              {toppings.map((topping) => {
-                const selected = selectedToppings.includes(topping.id);
-                return (
-                  <button
-                    key={topping.id}
-                    className={selected ? "active" : ""}
-                    onClick={() =>
-                      setSelectedToppings((current) =>
-                        selected
-                          ? current.filter((id) => id !== topping.id)
-                          : [...current, topping.id]
-                      )
-                    }
-                  >
-                    <span>{topping.name}</span>
-                    <strong>+₹{topping.price}</strong>
+            <div className="customizer-section">
+              <span>Size</span>
+              <div className="choice-grid">
+                {sizes.map((item) => (
+                  <button key={item.id} className={size === item.id ? "active" : ""} onClick={() => setSize(item.id)}>
+                    <strong>{item.name}</strong>
+                    <small>{item.price ? "+₹" + item.price : "Included"}</small>
                   </button>
-                );
-              })}
+                ))}
+              </div>
             </div>
 
-            <button className="modal-add" onClick={addPizzaWithToppings}>
+            <div className="customizer-section">
+              <span>Crust</span>
+              <div className="choice-grid three">
+                {crusts.map((item) => (
+                  <button key={item.id} className={crust === item.id ? "active" : ""} onClick={() => setCrust(item.id)}>
+                    <strong>{item.name}</strong>
+                    <small>{item.price ? "+₹" + item.price : "Included"}</small>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="customizer-section">
+              <span>Extra toppings</span>
+              <div className="topping-grid">
+                {toppings.map((topping) => {
+                  const selected = selectedToppings.includes(topping.id);
+                  return (
+                    <button
+                      key={topping.id}
+                      className={selected ? "active" : ""}
+                      onClick={() =>
+                        setSelectedToppings((current) =>
+                          selected ? current.filter((id) => id !== topping.id) : [...current, topping.id]
+                        )
+                      }
+                    >
+                      <span>{topping.name}</span>
+                      <strong>+₹{topping.price}</strong>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <label className="item-note">
+              Kitchen note
+              <textarea value={itemNote} onChange={(e) => setItemNote(e.target.value)} placeholder="e.g. light cheese, no onion" />
+            </label>
+
+            <button className="modal-add" onClick={addPizzaWithModifiers}>
               Add customized pizza · ₹
               {(
                 selectedPizza.price +
+                (sizes.find((item) => item.id === size)?.price || 0) +
+                (crusts.find((item) => item.id === crust)?.price || 0) +
                 selectedToppings.length * 60
               ).toFixed(0)}
             </button>
@@ -463,7 +582,7 @@ function App() {
           <div className="history-drawer" onMouseDown={(event) => event.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <span className="section-label">COMPLETED ORDERS</span>
+                <span className="section-label">ORDER OPERATIONS</span>
                 <h2>{orders.length} order{orders.length === 1 ? "" : "s"}</h2>
               </div>
               <button onClick={() => setHistoryOpen(false)}><X size={20} /></button>
@@ -472,26 +591,51 @@ function App() {
             <div className="history-list">
               {orders.length === 0 ? (
                 <div className="empty-state">
-                  <Clock3 size={28} />
-                  <h3>No completed orders</h3>
-                  <p>Orders will appear here after checkout.</p>
+                  <Clock3 size={30} />
+                  <h3>No orders yet</h3>
+                  <p>New orders will appear here after checkout.</p>
                 </div>
               ) : (
-                orders.map((order) => (
-                  <article className="order-card" key={order.id}>
-                    <div className="order-card-header">
-                      <div>
-                        <strong>{order.id}</strong>
-                        <span>{new Date(order.date).toLocaleString()}</span>
+                orders.map((order) => {
+                  const statusIndex = statusFlow.indexOf(order.status || "New");
+                  return (
+                    <article className="order-card" key={order.id}>
+                      <div className="order-card-header">
+                        <div>
+                          <strong>{order.id}</strong>
+                          <span>{new Date(order.date).toLocaleString()}</span>
+                        </div>
+                        <strong>₹{order.total.toFixed(2)}</strong>
                       </div>
-                      <strong>₹{order.total.toFixed(2)}</strong>
-                    </div>
-                    <div className="order-meta">
-                      <span>{order.payment}</span>
-                      <span>{order.items.reduce((sum, item) => sum + item.quantity, 0)} items</span>
-                    </div>
-                  </article>
-                ))
+
+                      <div className="order-customer">
+                        <span>{order.customer || "Guest"}</span>
+                        <span>
+                          {order.orderType}
+                          {order.table ? " · Table " + order.table : ""}
+                        </span>
+                      </div>
+
+                      <div className="status-track">
+                        {statusFlow.map((status, index) => (
+                          <span key={status} className={index <= statusIndex ? "done" : ""}>{status}</span>
+                        ))}
+                      </div>
+
+                      <div className="order-meta">
+                        <span>{order.payment}</span>
+                        <span>{order.items.reduce((sum, item) => sum + item.quantity, 0)} items</span>
+                      </div>
+
+                      {order.status !== "Completed" && (
+                        <button className="advance-button" onClick={() => advanceStatus(order.id)}>
+                          Advance to {statusFlow[Math.min(statusIndex + 1, statusFlow.length - 1)]}
+                          <ChevronRight size={15} />
+                        </button>
+                      )}
+                    </article>
+                  );
+                })
               )}
             </div>
           </div>
@@ -502,8 +646,8 @@ function App() {
         <div className="receipt-toast">
           <CheckCircle2 size={18} />
           <div>
-            <strong>{lastOrder.id} completed</strong>
-            <span>₹{lastOrder.total.toFixed(2)} · {lastOrder.payment}</span>
+            <strong>{lastOrder.id} sent to kitchen</strong>
+            <span>{lastOrder.orderType} · ₹{lastOrder.total.toFixed(2)} · {lastOrder.payment}</span>
           </div>
           <button onClick={() => setLastOrder(null)}><X size={16} /></button>
         </div>
