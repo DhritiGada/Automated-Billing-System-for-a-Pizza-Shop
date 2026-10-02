@@ -1142,3 +1142,25 @@ main {
 .menu-card:nth-child(n) .menu-visual {
   background: #f6efe7;
 }
+
+
+/* Keep menu photography faithful to the source image.
+   No zooming, no crop, and no hover transform. */
+.menu-visual {
+  height: 230px;
+  overflow: hidden;
+  background: #f7f3ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-visual img,
+.menu-card:hover .menu-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transform: none !important;
+  background: #f7f3ee;
+}
