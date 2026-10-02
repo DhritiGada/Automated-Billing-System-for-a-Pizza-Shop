@@ -22,26 +22,24 @@ import {
 } from "lucide-react";
 import "./styles.css";
 
-const CATEGORY_IMAGES = {
-  Pizza: "https://images.unsplash.com/photo-1581873372796-635b67ca2008?auto=format&fit=crop&w=1200&q=82",
-  Sides: "https://images.unsplash.com/photo-1669109230787-71bdd4699af4?auto=format&fit=crop&w=1200&q=82",
-  Beverages: "https://images.unsplash.com/photo-1591254471218-b33e875415c1?auto=format&fit=crop&w=1200&q=82",
-  Desserts: "https://images.unsplash.com/photo-1589375025852-a66cdd127efb?auto=format&fit=crop&w=1200&q=82",
-};
+const img = (filename) =>
+  "https://commons.wikimedia.org/wiki/Special:FilePath/" +
+  encodeURIComponent(filename) +
+  "?width=900";
 
 const menu = [
-  { id: 1, name: "Farmhouse Classic", category: "Pizza", price: 250, tag: "Classic", description: "Bell peppers, onion, tomato and mozzarella" },
-  { id: 2, name: "Truly Italian", category: "Pizza", price: 350, tag: "Popular", description: "Olives, herbs, mozzarella and tomato" },
-  { id: 3, name: "Deep Dish Supreme", category: "Pizza", price: 450, tag: "Premium", description: "Loaded deep-dish pizza with extra cheese" },
-  { id: 4, name: "Paneer Tikka Pizza", category: "Pizza", price: 420, tag: "Spicy", description: "Paneer, onion, capsicum and tikka sauce" },
-  { id: 5, name: "Margherita", category: "Pizza", price: 220, tag: "Value", description: "Tomato, mozzarella and basil" },
-  { id: 6, name: "Garlic Bread", category: "Sides", price: 150, tag: "Side", description: "Toasted garlic bread with herbs" },
-  { id: 7, name: "White Sauce Pasta", category: "Sides", price: 250, tag: "Side", description: "Creamy white-sauce pasta" },
-  { id: 8, name: "Cheese Dip", category: "Sides", price: 90, tag: "Add-on", description: "Warm cheese dip" },
-  { id: 9, name: "Apna Cola", category: "Beverages", price: 90, tag: "Drink", description: "Chilled sparkling cola" },
-  { id: 10, name: "Lemon Fizz", category: "Beverages", price: 110, tag: "Drink", description: "Sparkling lemon cooler" },
-  { id: 11, name: "Chocolate Brownie", category: "Desserts", price: 140, tag: "Dessert", description: "Warm chocolate brownie" },
-  { id: 12, name: "Tiramisu Cup", category: "Desserts", price: 180, tag: "Dessert", description: "Coffee-flavored cream dessert" },
+  { id: 1, name: "Farmhouse Classic", category: "Pizza", price: 250, tag: "Classic", description: "Bell peppers, onion, tomato and mozzarella", image: img("MargheritaPizzaUS.jpg") },
+  { id: 2, name: "Truly Italian", category: "Pizza", price: 350, tag: "Popular", description: "Olives, herbs, mozzarella and tomato", image: img("PizzaMargherita.jpg") },
+  { id: 3, name: "Deep Dish Supreme", category: "Pizza", price: 450, tag: "Premium", description: "Loaded deep-dish pizza with extra cheese", image: img("Deep-Dish Pizza.jpg") },
+  { id: 4, name: "Paneer Tikka Pizza", category: "Pizza", price: 420, tag: "Spicy", description: "Paneer, onion, capsicum and tikka sauce", image: img("Paneer Tikka Pizza.jpg") },
+  { id: 5, name: "Margherita", category: "Pizza", price: 220, tag: "Value", description: "Tomato, mozzarella and basil", image: img("Margherita pizza.jpg") },
+  { id: 6, name: "Garlic Bread", category: "Sides", price: 150, tag: "Side", description: "Toasted garlic bread with herbs", image: img("Garlic bread.jpg") },
+  { id: 7, name: "White Sauce Pasta", category: "Sides", price: 250, tag: "Side", description: "Creamy white-sauce pasta", image: img("White sauce pasta.jpg") },
+  { id: 8, name: "Cheese Dip", category: "Sides", price: 90, tag: "Add-on", description: "Warm cheese dip", image: img("Breadsticks with cheese dip.jpg") },
+  { id: 9, name: "Apna Cola", category: "Beverages", price: 90, tag: "Drink", description: "Chilled sparkling cola", image: img("Glass of cola.jpg") },
+  { id: 10, name: "Lemon Fizz", category: "Beverages", price: 110, tag: "Drink", description: "Sparkling lemon cooler", image: img("Classic Lemonade.jpg") },
+  { id: 11, name: "Chocolate Brownie", category: "Desserts", price: 140, tag: "Dessert", description: "Warm chocolate brownie", image: img("Brownie chocolate.jpg") },
+  { id: 12, name: "Tiramisu Cup", category: "Desserts", price: 180, tag: "Dessert", description: "Coffee-flavored cream dessert", image: img("Tiramisu dessert.jpg") },
 ];
 
 const toppings = [
@@ -399,7 +397,18 @@ function App() {
             {filteredMenu.map((item) => (
               <article className="menu-card" key={item.id}>
                 <div className="menu-visual">
-                  <img src={CATEGORY_IMAGES[item.category]} alt={item.name} />
+                  <div className="image-fallback">
+                    <span>{item.category}</span>
+                    <strong>{item.name}</strong>
+                  </div>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    loading="lazy"
+                    onError={(event) => {
+                      event.currentTarget.style.display = "none";
+                    }}
+                  />
                   <span className="menu-tag">{item.tag}</span>
                 </div>
                 <div className="menu-body">
